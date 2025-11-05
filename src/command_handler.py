@@ -49,11 +49,37 @@ class CommandHandler:
         parser_generate = subparsers.add_parser('generate', help='Generate daily report from markdown file')
         parser_generate.add_argument('file', type=str, help='The markdown file to generate report from')
         parser_generate.set_defaults(func=self.generate_daily_report)
-
+        
         # 帮助命令
         parser_help = subparsers.add_parser('help', help='Show help message')
         parser_help.set_defaults(func=self.print_help)
+        # 在 create_parser() 中添加以下命令
+        # 在 create_parser() 中添加以下命令
+        parser_hn = subparsers.add_parser('hn', help='Fetch Hacker News top stories')
+        parser_hn.add_argument('--limit', type=int, default=10, help='Number of stories to fetch (default=10)')
+        parser_hn.set_defaults(func=self.fetch_hackernews)
 
+# 添加对应方法
+def fetch_hackernews(self, args):
+    from hacker_news_client import HackerNewsClient
+    hn_client = HackerNewsClient()
+    stories = hn_client.fetch_top_stories(limit=args.limit)
+    if not stories:
+        print("⚠️  No stories found.")
+        return
+    report_path = self.report_generator.generate_hackernews_report(stories)
+    print(f"✅ Hacker News report generated: {report_path}")
+
+# 添加对应方法
+def fetch_hackernews(self, args):
+    from hacker_news_client import HackerNewsClient
+    hn_client = HackerNewsClient()
+    stories = hn_client.fetch_top_stories(limit=args.limit)
+    if not stories:
+        print("⚠️  No stories found.")
+        return
+    report_path = self.report_generator.generate_hackernews_report(stories)
+    print(f"✅ Hacker News report generated: {report_path}")
         return parser  # 返回配置好的解析器
 
     # 下面是各种命令对应的方法实现，每个方法都使用了相应的管理器来执行实际操作，并输出结果信息
