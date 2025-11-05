@@ -22,7 +22,20 @@ class ReportGenerator:
         LOG.info(f"GitHub 项目报告已保存到 {report_file_path}")
 
         return report, report_file_path
+        
+    def generate_hackernews_report(self, stories):
+        LOG.info("Generating Hacker News report...")
+        today = datetime.now().strftime("%Y-%m-%d")
+        report_path = os.path.join("reports", f"hackernews_{today}.md")
+        os.makedirs("reports", exist_ok=True)
 
+        with open(report_path, "w", encoding="utf-8") as f:
+            f.write(f"# Hacker News Top Stories ({today})\n\n")
+            for i, story in enumerate(stories, 1):
+                f.write(f"{i}. [{story['title']}]({story['link']})\n")
+
+        LOG.info(f"Hacker News report generated: {report_path}")
+        return report_path
 
     def generate_report_by_date_range(self, markdown_file_path, days):
         # 生成特定日期范围的报告，流程与日报生成类似
