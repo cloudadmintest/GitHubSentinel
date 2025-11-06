@@ -78,27 +78,61 @@ class CommandHandler:
 
 
 # 添加对应方法
-def fetch_hackernews(self, args):
-    from hacker_news_client import HackerNewsClient
-    hn_client = HackerNewsClient()
-    stories = hn_client.fetch_top_stories(limit=args.limit)
-    if not stories:
-        print("⚠️  No stories found.")
-        return
-    report_path = self.report_generator.generate_hackernews_report(stories)
-    print(f"✅ Hacker News report generated: {report_path}")
+    def fetch_hackernews(self, args):
+        from hacker_news_client import HackerNewsClient
+        hn_client = HackerNewsClient()
+        stories = hn_client.fetch_top_stories(limit=args.limit)
+        if not stories:
+            print("⚠️  No stories found.")
+            return
+        report_path = self.report_generator.generate_hackernews_report(stories)
+        print(f"✅ Hacker News report generated: {report_path}")
 
 # 添加对应方法
-def fetch_hackernews(self, args):
-    from hacker_news_client import HackerNewsClient
-    hn_client = HackerNewsClient()
-    stories = hn_client.fetch_top_stories(limit=args.limit)
-    if not stories:
-        print("⚠️  No stories found.")
-        return
-    report_path = self.report_generator.generate_hackernews_report(stories)
-    print(f"✅ Hacker News report generated: {report_path}")
-        return parser  # 返回配置好的解析器
+    def fetch_hackernews(self, args):
+        from hacker_news_client import HackerNewsClient
+        hn_client = HackerNewsClient()
+        stories = hn_client.fetch_top_stories(limit=args.limit)
+        if not stories:
+            print("⚠️  No stories found.")
+            return
+        report_path = self.report_generator.generate_hackernews_report(stories)
+        print(f"✅ Hacker News report generated: {report_path}")
+            return parser  # 返回配置好的解析器
+
+    def add_custom_task(self, args):
+        from custom_agent import CustomAgent
+        agent = CustomAgent(self.github_client.config, self.report_generator)
+        agent.add_task(args.name, args.url, args.interval)
+        print(f"✅ Added custom task '{args.name}' for {args.url} every {args.interval}s")
+
+    def remove_custom_task(self, args):
+        from custom_agent import CustomAgent
+        agent = CustomAgent(self.github_client.config, self.report_generator)
+        agent.remove_task(args.name)
+        print(f"🗑️ Removed task '{args.name}'")
+    
+    def list_custom_tasks(self, args):
+        from custom_agent import CustomAgent
+        agent = CustomAgent(self.github_client.config, self.report_generator)
+        tasks = agent.list_tasks()
+        if tasks:
+            print("📋 Current tasks:")
+            for name, t in tasks.items():
+                print(f" - {name}: {t['url']} (interval={t['interval']}s)")
+        else:
+            print("⚠️ No tasks configured.")
+    
+    def run_custom_task_once(self, args):
+        from custom_agent import CustomAgent
+        agent = CustomAgent(self.github_client.config, self.report_generator)
+        tasks = agent.list_tasks()
+        if args.name not in tasks:
+            print(f"❌ Task '{args.name}' not found.")
+            return
+        task = tasks[args.name]
+        agent.run_task_once(args.name, task["url"])
+
 
     # 下面是各种命令对应的方法实现，每个方法都使用了相应的管理器来执行实际操作，并输出结果信息
     def add_subscription(self, args):
