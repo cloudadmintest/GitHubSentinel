@@ -15,7 +15,8 @@ def main():
     report_generator = ReportGenerator(llm)  # 创建报告生成器实例
     subscription_manager = SubscriptionManager(config.subscriptions_file)  # 创建订阅管理器实例
     command_handler = CommandHandler(github_client, subscription_manager, report_generator)  # 创建命令处理器实例
-    
+    custom_agent = CustomAgent(config, report_generator)
+    custom_agent.start_scheduler()
     parser = command_handler.parser  # 获取命令解析器
     command_handler.print_help()  # 打印帮助信息
 
