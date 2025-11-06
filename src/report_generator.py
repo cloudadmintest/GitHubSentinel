@@ -22,7 +22,20 @@ class ReportGenerator:
         LOG.info(f"GitHub 项目报告已保存到 {report_file_path}")
 
         return report, report_file_path
+    def generate_custom_report(self, name, url, content):
+        today = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        report_dir = os.path.join("reports", "custom")
+        os.makedirs(report_dir, exist_ok=True)
+        report_path = os.path.join(report_dir, f"{name}_{today}.md")
         
+        with open(report_path, "w", encoding="utf-8") as f:
+          f.write(f"# Report: {name}\n")
+          f.write(f"**Source URL:** {url}\n")
+          f.write(f"**Generated:** {today}\n\n")
+          f.write("## Extracted Content\n")
+          f.write(content)
+        return report_path
+   
     def generate_hackernews_report(self, stories):
         LOG.info("Generating Hacker News report...")
         today = datetime.now().strftime("%Y-%m-%d")
