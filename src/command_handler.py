@@ -58,6 +58,24 @@ class CommandHandler:
         parser_hn = subparsers.add_parser('hn', help='Fetch Hacker News top stories')
         parser_hn.add_argument('--limit', type=int, default=10, help='Number of stories to fetch (default=10)')
         parser_hn.set_defaults(func=self.fetch_hackernews)
+        # 在 create_parser() 中添加以下命令：
+        parser_task_add = subparsers.add_parser('task-add', help='Add a custom crawling task')
+        parser_task_add.add_argument('name', type=str, help='Task name')
+        parser_task_add.add_argument('url', type=str, help='Target URL')
+        parser_task_add.add_argument('interval', type=int, help='Crawl interval in seconds')
+        parser_task_add.set_defaults(func=self.add_custom_task)
+
+        parser_task_remove = subparsers.add_parser('task-remove', help='Remove a custom task')
+        parser_task_remove.add_argument('name', type=str, help='Task name')
+        parser_task_remove.set_defaults(func=self.remove_custom_task)
+
+        parser_task_list = subparsers.add_parser('task-list', help='List all custom tasks')
+        parser_task_list.set_defaults(func=self.list_custom_tasks)
+
+        parser_task_run = subparsers.add_parser('task-run', help='Run a specific custom task once')
+        parser_task_run.add_argument('name', type=str, help='Task name')
+        parser_task_run.set_defaults(func=self.run_custom_task_once)
+
 
 # 添加对应方法
 def fetch_hackernews(self, args):
